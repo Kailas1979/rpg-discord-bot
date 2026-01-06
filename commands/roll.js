@@ -3,7 +3,9 @@ const {
   EmbedBuilder
 } = require('discord.js');
 
-const config = require('../config.json');
+// 🔥 Usa le variabili ambiente invece di config.json
+const API_URL = process.env.API_URL;
+const API_TOKEN = process.env.API_TOKEN;
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -38,7 +40,7 @@ module.exports = {
     // RECUPERO SCHEDA
     // ============================
     const discordId = interaction.user.id;
-    const url = `${config.api_url}?discord_id=${encodeURIComponent(discordId)}&token=${encodeURIComponent(config.api_token)}`;
+    const url = `${API_URL}?discord_id=${encodeURIComponent(discordId)}&token=${encodeURIComponent(API_TOKEN)}`;
 
     let json;
     try {

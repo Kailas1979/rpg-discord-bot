@@ -3,7 +3,9 @@ const {
   EmbedBuilder
 } = require('discord.js');
 
-const config = require('../config.json');
+// 🔥 Usa le variabili ambiente invece di config.json
+const API_URL = process.env.API_URL;
+const API_TOKEN = process.env.API_TOKEN;
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -30,9 +32,9 @@ module.exports = {
       if (isNaN(modificatore)) modificatore = 0;
     }
 
-    // Recupero scheda
+    // 🔥 Recupero scheda usando API_URL e API_TOKEN
     const discordId = interaction.user.id;
-    const url = `${config.api_url}?discord_id=${encodeURIComponent(discordId)}&token=${encodeURIComponent(config.api_token)}`;
+    const url = `${API_URL}?discord_id=${encodeURIComponent(discordId)}&token=${encodeURIComponent(API_TOKEN)}`;
 
     let json;
     try {
@@ -64,12 +66,12 @@ module.exports = {
       );
     }
 
-    // Tiro 3d10
+    // 🎲 Tiro 3d10
     const d1 = Math.floor(Math.random() * 10) + 1;
     const d2 = Math.floor(Math.random() * 10) + 1;
     const d3 = Math.floor(Math.random() * 10) + 1;
 
-    const dadi = [d1, d2, d3].sort((a, b) => a - b); // ordina dal più basso
+    const dadi = [d1, d2, d3].sort((a, b) => a - b);
     const peggiori2 = dadi[0] + dadi[1];
 
     const totale = peggiori2 + Number(valoreAttr) + modificatore;

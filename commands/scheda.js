@@ -6,7 +6,9 @@ const {
   EmbedBuilder
 } = require('discord.js');
 
-const config = require('../config.json');
+// 🔥 Usa le variabili ambiente invece di config.json
+const API_URL = process.env.API_URL;
+const API_TOKEN = process.env.API_TOKEN;
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -17,7 +19,9 @@ module.exports = {
     await interaction.deferReply({ flags: 64 });
 
     const discordId = interaction.user.id;
-    const url = `${config.api_url}?discord_id=${encodeURIComponent(discordId)}&token=${encodeURIComponent(config.api_token)}`;
+
+    // 🔥 Costruzione URL API usando variabili ambiente
+    const url = `${API_URL}?discord_id=${encodeURIComponent(discordId)}&token=${encodeURIComponent(API_TOKEN)}`;
 
     let json;
     try {
@@ -35,7 +39,6 @@ module.exports = {
     const scheda = json.scheda || {};
     const abilita = json.abilita_acquistate || [];
 
-    // Funzione di sicurezza: converte qualsiasi valore in stringa
     const safe = (v) => {
       if (v === null || v === undefined) return "N/D";
       if (typeof v === "object") {
@@ -46,21 +49,16 @@ module.exports = {
       return String(v);
     };
 
-    // Ferite leggibili
     const feriteReadable = Object.entries(scheda.ferite || {})
       .filter(([k, v]) => v === true)
       .map(([k]) => k.replace(/_/g, " "))
       .join(", ") || "Sano";
 
-    // Stabilità leggibile
     const stabilitaReadable = Object.entries(scheda.stabilita || {})
       .filter(([k, v]) => v === true)
       .map(([k]) => k.replace(/_/g, " "))
       .join(", ") || "Calmo";
 
-    // ============================
-    // EMBED PAGINA 1 — SCHEDA
-    // ============================
     const embedScheda = new EmbedBuilder()
       .setTitle(`📄 Scheda di ${safe(scheda.nome_personaggio)}`)
       .setColor("#2b8cff")
@@ -76,9 +74,6 @@ module.exports = {
         { name: "🧠 Stabilità", value: stabilitaReadable, inline: true }
       );
 
-    // ============================
-    // EMBED PAGINA 2 — ABILITÀ
-    // ============================
     const embedAbilita = new EmbedBuilder()
       .setTitle(`✨ Abilità Acquistate`)
       .setColor("#ffb32b");
@@ -95,9 +90,6 @@ module.exports = {
       );
     }
 
-    // ============================
-    // BOTTONI
-    // ============================
     const buttons = new ActionRowBuilder().addComponents(
       new ButtonBuilder()
         .setCustomId('scheda_page')
@@ -115,17 +107,13 @@ module.exports = {
         .setStyle(ButtonStyle.Danger)
     );
 
-    // Invia la pagina iniziale
     const message = await interaction.editReply({
       embeds: [embedScheda],
       components: [buttons]
     });
 
-    // ============================
-    // GESTIONE CLICK BOTTONI
-    // ============================
     const collector = message.createMessageComponentCollector({
-      time: 5 * 60 * 1000 // 5 minuti
+      time: 5 * 60 * 1000
     });
 
     collector.on('collect', async i => {

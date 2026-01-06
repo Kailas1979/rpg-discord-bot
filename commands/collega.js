@@ -1,5 +1,8 @@
 const { SlashCommandBuilder } = require('discord.js');
-const config = require('../config.json');
+
+// 🔥 Usa variabili ambiente invece di config.json
+const API_URL_COLLEGA = process.env.API_URL_COLLEGA;
+const API_TOKEN = process.env.API_TOKEN;
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -17,7 +20,8 @@ module.exports = {
     const email = interaction.options.getString('email');
     const discordId = interaction.user.id;
 
-    const url = `${config.api_url_collega}?email=${encodeURIComponent(email)}&discord_id=${encodeURIComponent(discordId)}&token=${encodeURIComponent(config.api_token)}`;
+    // 🔥 Costruzione URL API usando variabili ambiente
+    const url = `${API_URL_COLLEGA}?email=${encodeURIComponent(email)}&discord_id=${encodeURIComponent(discordId)}&token=${encodeURIComponent(API_TOKEN)}`;
 
     try {
       const res = await fetch(url);

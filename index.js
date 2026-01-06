@@ -1,7 +1,9 @@
 const fs = require('fs');
 const path = require('path');
 const { Client, Collection, GatewayIntentBits, Events } = require('discord.js');
-const config = require('./config.json');
+
+// 🔥 Usa le variabili ambiente di Render
+const token = process.env.DISCORD_TOKEN;
 
 const client = new Client({
   intents: [GatewayIntentBits.Guilds]
@@ -39,7 +41,6 @@ client.on(Events.InteractionCreate, async interaction => {
   } catch (error) {
     console.error("Errore durante l'esecuzione del comando:", error);
 
-    // Se il comando ha già risposto o deferReply è stato usato
     if (interaction.deferred || interaction.replied) {
       await interaction.editReply({
         content: 'Si è verificato un errore durante l’esecuzione del comando.'
@@ -47,10 +48,11 @@ client.on(Events.InteractionCreate, async interaction => {
     } else {
       await interaction.reply({
         content: 'Si è verificato un errore durante l’esecuzione del comando.',
-        flags: 64 // sostituisce ephemeral
+        flags: 64
       });
     }
   }
 });
 
-client.login(config.token);
+// 🔥 Login con il token preso dalle variabili ambiente
+client.login(token);

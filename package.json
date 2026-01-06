@@ -1,0 +1,13 @@
+{
+  "name": "discord-bot-rpg",
+  "version": "1.0.0",
+  "description": "Bot Discord per mostrare la scheda RPG dal sito WordPress",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "deploy-commands": "node deploy-commands.js"
+  },
+  "dependencies": {
+    "discord.js": "^14.15.3"
+  }
+}
